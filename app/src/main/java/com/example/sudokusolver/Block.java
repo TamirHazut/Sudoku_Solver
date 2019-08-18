@@ -21,6 +21,7 @@ public class Block extends GridLayout {
         this.setRowCount(3);
         this.setBackground(context.getResources().getDrawable(R.drawable.block_border));
     }
+
     private void setCells() {
         cells = new Cell[9];
         for (int i = 0; i < 3; i++) {
@@ -37,33 +38,15 @@ public class Block extends GridLayout {
         this.addView(cell);
     }
 
-    protected void showValues(char number) {
-        for (int i = 0; i < 9; i++) {
-            cells[i].showValue(number);
-        }
-    }
-
     public Cell[] getCells() {
         return cells;
     }
 
     protected int getCellIndex(int row, int column) {
-        int temp_row = getBlockStartIndex(row);
-        int temp_column = getBlockStartIndex(column);
+        int temp_block_row = row/3;
+        int temp_block_column = column/3;
+        int temp_row = row - (temp_block_row*3);
+        int temp_column = column - (temp_block_column*3);
         return (temp_row*3) + temp_column;
-    }
-
-    private int getBlockStartIndex(int index) {
-        switch ((index%3)) {
-            case 0:
-                break;
-            case 1:
-                index -= 1;
-                break;
-            case 2:
-                index -= 2;
-                break;
-        }
-        return index;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class Board extends GridLayout {
     private Block[] blocks;
     private char[][] board;
+    private boolean solved;
 
     public Board(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,7 +78,7 @@ public class Board extends GridLayout {
 //        }
     }
 
-    protected void showValueOnBoard(int row, int column, char number) {
+    private void showValueOnBoard(int row, int column, char number) {
         int blockIndex = getBlockIndex(row, column);
         int cellIndex = this.blocks[blockIndex].getCellIndex(row, column);
         this.blocks[blockIndex].getCells()[cellIndex].showValue(number);
@@ -88,29 +89,49 @@ public class Board extends GridLayout {
         int temp_column = column/3;
         return (temp_row*3)+temp_column;
     }
+    protected void setBoard2() {
+       this.board = new char[][] {
+                {'9','0','0','1','0','0','0','0','5'},
+                {'0','0','5','0','9','0','2','0','1'},
+                {'8','0','0','0','4','0','0','0','0'},
+                {'0','0','0','0','8','0','0','0','0'},
+                {'0','0','0','7','0','0','0','0','0'},
+                {'0','0','0','0','2','6','0','0','9'},
+                {'2','0','0','3','0','0','0','0','6'},
+                {'0','0','0','2','0','0','9','0','0'},
+                {'0','0','1','9','0','4','5','7','0'},
+        };
+        showValues();
+    }
+
+    protected void showValues() {
+        for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
+            for (int j = 0; j < MainActivity.ROW_AND_COL_LENGTH; j++) {
+                showValueOnBoard(i, j, board[i][j]);
+            }
+        }
+    }
 
     protected boolean solveBoard() {
         for (int row = 0; row < MainActivity.ROW_AND_COL_LENGTH; row++) {
             for (int col = 0; col < MainActivity.ROW_AND_COL_LENGTH; col++) {
-                // we search an empty cell
                 if (board[row][col] == MainActivity.EMPTY_CELL) {
-                    // we try possible numbers
                     for (char number = MainActivity.MIN_VALUE; number <= MainActivity.MAX_VALUE; number++) {
                         if (isAValidMove(row, col, number)) {
                             board[row][col] = number;
+//                            showValueOnBoard(row, col, number);
                             if (solveBoard()) {
-                                showValueOnBoard(row, col, number);// we start backtracking recursively
                                 return true;
-                            } else { // if not a solution, we empty the cell and we continue
+                            } else {
                                 board[row][col] = MainActivity.EMPTY_CELL;
                             }
                         }
                     }
-                    return false; // we return false
+                    return false;
                 }
             }
         }
-        return true; // sudoku solved
+        return true;
     }
 
     private boolean isAValidMove(int row, int column, char number) {
@@ -126,7 +147,6 @@ public class Board extends GridLayout {
         return false;
     }
 
-    // we check if a possible number is already in a column
     private boolean isInCol(int col, char number) {
         for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
             if (board[i][col] == number) {
@@ -136,10 +156,8 @@ public class Board extends GridLayout {
         return false;
     }
 
-    // we check if a possible number is in its 3x3 box
     private boolean isInBox(int row, int col, char number) {
-        int r = row - row % 3;
-        int c = col - col % 3;
+        int r = row - row % 3, c = col - col % 3;
         for (int i = r; i < r + 3; i++) {
             for (int j = c; j < c + 3; j++) {
                 if (board[i][j] == number) {
