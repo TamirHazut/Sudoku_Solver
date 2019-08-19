@@ -1,10 +1,14 @@
 package com.example.sudokusolver;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
+
+import org.w3c.dom.Text;
 
 public class Cell extends AppCompatEditText {
     private int cell_row;
@@ -17,6 +21,23 @@ public class Cell extends AppCompatEditText {
         setAttributes(context);
     }
 
+    /* Display Methods */
+    protected void displayValue(char number) {
+        setText((number != '0' ? Character.toString(number) : ""));
+    }
+
+    protected void changeTextColor(int color) {
+        switch (color) {
+            case Color.RED:
+                setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                break;
+            case Color.GREEN:
+                setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                break;
+        }
+    }
+
+    /* Attributes */
     private void setAttributes(Context context) {
         this.setWidth(0);
         this.setHeight(0);
@@ -27,7 +48,12 @@ public class Cell extends AppCompatEditText {
         this.setTextSize(20);
     }
 
-    protected void showValue(char number) {
-        setText((number != '0' ? Character.toString(number) : ""));
+    /* Setters & Getters */
+    public int getCell_row() {
+        return cell_row;
+    }
+
+    public int getCell_column() {
+        return cell_column;
     }
 }

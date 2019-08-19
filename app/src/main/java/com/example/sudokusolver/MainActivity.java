@@ -2,7 +2,6 @@ package com.example.sudokusolver;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -28,9 +27,12 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        table.setBoard2();
-                        if (table.solveBoard()) {
-                            table.showValues();
+                        if (!table.isSolving()) {
+                            table.setSolving();
+                            if (table.solveBoard()) {
+                                table.displayValuesOnBoard();
+                            }
+                            table.setSolving();
                         }
                     }
                 }

@@ -16,10 +16,17 @@ public class Block extends GridLayout {
         setCells();
     }
 
+    /* Layouts & Attributes */
     private void setAttributes(Context context) {
         this.setColumnCount(3);
         this.setRowCount(3);
         this.setBackground(context.getResources().getDrawable(R.drawable.block_border));
+    }
+
+    private void setLayout(Cell cell, int row, int column) {
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(row, 1F), GridLayout.spec(column, 1F));
+        cell.setLayoutParams(params);
+        this.addView(cell);
     }
 
     private void setCells() {
@@ -32,12 +39,7 @@ public class Block extends GridLayout {
         }
     }
 
-    private void setLayout(Cell cell, int row, int column) {
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(row, 1F), GridLayout.spec(column, 1F));
-        cell.setLayoutParams(params);
-        this.addView(cell);
-    }
-
+    /* Setters & Getters */
     public Cell[] getCells() {
         return cells;
     }
@@ -49,4 +51,5 @@ public class Block extends GridLayout {
         int temp_column = column - (temp_block_column*3);
         return (temp_row*3) + temp_column;
     }
+
 }
