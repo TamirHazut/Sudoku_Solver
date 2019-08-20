@@ -8,8 +8,6 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 
-import org.w3c.dom.Text;
-
 public class Cell extends AppCompatEditText {
     private int cell_row;
     private int cell_column;
@@ -24,6 +22,7 @@ public class Cell extends AppCompatEditText {
     /* Display Methods */
     protected void displayValue(char number) {
         setText((number != '0' ? Character.toString(number) : ""));
+        setEnabled(false);
     }
 
     protected void changeTextColor(int color) {
@@ -33,6 +32,9 @@ public class Cell extends AppCompatEditText {
                 break;
             case Color.GREEN:
                 setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                break;
+            default:
+                setTextColor(ContextCompat.getColor(getContext(), R.color.grey));
                 break;
         }
     }
@@ -46,6 +48,7 @@ public class Cell extends AppCompatEditText {
         this.setInputType(InputType.TYPE_CLASS_NUMBER);
         this.setFilters(new InputFilter[] { new InputFilter.LengthFilter(1), new CellFilter() });
         this.setTextSize(20);
+        changeTextColor(Color.BLACK);
     }
 
     /* Setters & Getters */
@@ -55,5 +58,12 @@ public class Cell extends AppCompatEditText {
 
     public int getCell_column() {
         return cell_column;
+    }
+
+
+    protected void resetCell() {
+        setText("");
+        setEnabled(true);
+        changeTextColor(Color.BLACK);
     }
 }

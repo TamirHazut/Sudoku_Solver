@@ -52,4 +52,9 @@ public class Block extends GridLayout {
         return (temp_row*3) + temp_column;
     }
 
+    protected void resetBlock() {
+        for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
+            getCells()[i].resetCell();
+        }
+    }
 }

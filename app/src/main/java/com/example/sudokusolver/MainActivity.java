@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Board table;
     private Button solve_button;
+    private Button reset_button;
     public static final int ROW_AND_COL_LENGTH = 9;
     public static final char MIN_VALUE = '1';
     public static final char MAX_VALUE = '9';
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         table = (Board) findViewById(R.id.sudoku_table);
         solve_button = (Button) findViewById(R.id.solve_button);
+        reset_button = (Button) findViewById(R.id.reset_button);
 
         solve_button.setOnClickListener(
                 new View.OnClickListener() {
@@ -35,8 +37,15 @@ public class MainActivity extends AppCompatActivity {
                             table.setSolving();
                         }
                     }
-                }
-        );
+                });
+
+        reset_button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        table.resetBoard();
+                    }
+                });
     }
 
 }

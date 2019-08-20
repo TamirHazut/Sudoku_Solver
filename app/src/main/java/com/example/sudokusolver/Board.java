@@ -219,4 +219,10 @@ public class Board extends GridLayout {
             Arrays.fill(invalidBoard[i], false);
         }
     }
+
+    protected void resetBoard() {
+        for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
+            this.blocks[i].resetBlock();
+        }
+    }
 }
