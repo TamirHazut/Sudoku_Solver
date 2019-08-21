@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board extends GridLayout {
@@ -14,6 +15,7 @@ public class Board extends GridLayout {
     private char[][] gameBoard;
     private boolean[][] invalidBoard;
     private boolean solving = false;
+    private ArrayList<Integer> invalids = new ArrayList<>();
 
     public Board(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,12 +51,12 @@ public class Board extends GridLayout {
                 if (invalidBoard[row][column]) {
                     invalidBoard[row][column] = false;
                     changeValueColorOnBoard(row, column, Color.GREEN);
-                    checkForNewValidMoves(row, column);
+                    iSANewValidMove(row, column);
                 }
             } else {
                 if (validMove) {
                     changeValueColorOnBoard(row, column, Color.GREEN);
-                    checkForNewValidMoves(row, column);
+                    iSANewValidMove(row, column);
                 } else {
                     changeValueColorOnBoard(row, column, Color.RED);
                 }
@@ -86,46 +88,57 @@ public class Board extends GridLayout {
 
     /* Validation Methods */
     private boolean isAValidMove(int row, int column, char number) {
-        boolean valid = (!isInRow(row, number) && !isInCol(column, number) && !isInBox(row, column, number));
+        isInARow(row, number);
+        isInACol(column, number);
+        isInABlock(row, column, number);
+        boolean valid = invalids.isEmpty();
         if (!valid) {
             invalidBoard[row][column] = true;
+            invalids.clear();
         }
         return valid;
     }
 
-    private boolean isInRow(int row, char number) {
+    private void isInARow(int row, char number) {
         for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
             if (gameBoard[row][i] == number) {
-                return true;
+                invalids.add(i);
+                invalidBoard[row][i] = true;
+                if (!solving) {
+                    changeValueColorOnBoard(row, i, Color.RED);
+                }
             }
         }
-        return false;
     }
 
-    private boolean isInCol(int col, char number) {
+    private void isInACol(int col, char number) {
         for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
             if (gameBoard[i][col] == number) {
+                invalids.add(i);
                 invalidBoard[i][col] = true;
-                return true;
+                if (!solving) {
+                    changeValueColorOnBoard(i, col, Color.RED);
+                }
             }
         }
-        return false;
     }
 
-    private boolean isInBox(int row, int col, char number) {
+    private void isInABlock(int row, int col, char number) {
         int r = row - row % 3, c = col - col % 3;
         for (int i = r; i < r + 3; i++) {
             for (int j = c; j < c + 3; j++) {
                 if (gameBoard[i][j] == number) {
+                    invalids.add(i);
                     invalidBoard[i][j] = true;
-                    return true;
+                    if (!solving) {
+                        changeValueColorOnBoard(i, j, Color.RED);
+                    }
                 }
             }
         }
-        return false;
     }
 
-    private void checkForNewValidMoves(int row, int column) {
+    private void iSANewValidMove(int row, int column) {
         char temp = gameBoard[row][column];
         gameBoard[row][column] = '0';
         for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
@@ -144,6 +157,17 @@ public class Board extends GridLayout {
         gameBoard[row][column] = temp;
     }
 
+    protected boolean isAValidStart() {
+        for (int i = 0; i < MainActivity.ROW_AND_COL_LENGTH; i++) {
+            for (int j = 0; j < MainActivity.ROW_AND_COL_LENGTH; j++) {
+                if (invalidBoard[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /* Layouts & Attributes */
     private void setAttributes() {
         this.setColumnCount(3);
@@ -160,7 +184,10 @@ public class Board extends GridLayout {
         blocks = new Block[9];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                blocks[(i*3)+j] = new Block(this.getContext(), i, j);
+                blocks[(i*3)+j] = new Block(this.getContext());
+                blocks[(i*3)+j].setBlock_row(i);
+                blocks[(i*3)+j].setBlock_column(j);
+                blocks[(i*3)+j].setCells();
                 setLayout(blocks[(i*3)+j], i, j);
             }
         }

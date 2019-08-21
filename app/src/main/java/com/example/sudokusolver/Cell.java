@@ -12,10 +12,8 @@ public class Cell extends AppCompatEditText {
     private int cell_row;
     private int cell_column;
 
-    public Cell(Context context, int row, int column) {
+    public Cell(Context context) {
         super(context);
-        this.cell_row = row;
-        this.cell_column = column;
         setAttributes(context);
     }
 
@@ -52,14 +50,19 @@ public class Cell extends AppCompatEditText {
     }
 
     /* Setters & Getters */
-    public int getCell_row() {
-        return cell_row;
-    }
+    public int getCell_row() { return cell_row; }
 
     public int getCell_column() {
         return cell_column;
     }
 
+    public void setCell_row(int cell_row) {
+        this.cell_row = cell_row;
+    }
+
+    public void setCell_column(int cell_column) {
+        this.cell_column = cell_column;
+    }
 
     protected void resetCell() {
         setText("");

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Sudoku Solver</string>
-    <string name="solve_button">Solve</string>
-    <string name="reset_button">Reset</string>
+    <string name="solve">Solve</string>
+    <string name="reset">Reset</string>
 </resources>

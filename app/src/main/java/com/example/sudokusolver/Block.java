@@ -8,12 +8,9 @@ public class Block extends GridLayout {
     private int block_row;
     private int block_column;
 
-    public Block(Context context, int block_row, int block_column) {
+    public Block(Context context) {
         super(context);
-        this.block_row = block_row;
-        this.block_column = block_column;
         setAttributes(context);
-        setCells();
     }
 
     /* Layouts & Attributes */
@@ -29,17 +26,28 @@ public class Block extends GridLayout {
         this.addView(cell);
     }
 
-    private void setCells() {
+    protected void setCells() {
         cells = new Cell[9];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                cells[(i*3)+j] = new Cell(this.getContext(),(this.block_row*3) + i, (this.block_column*3) + j);
+                cells[(i*3)+j] = new Cell(this.getContext());
+                cells[(i*3)+j].setCell_row((this.block_row*3) + i);
+                cells[(i*3)+j].setCell_column((this.block_column*3) + j);
                 setLayout(cells[(i*3)+j], i, j);
             }
         }
     }
 
     /* Setters & Getters */
+
+    public void setBlock_row(int block_row) {
+        this.block_row = block_row;
+    }
+
+    public void setBlock_column(int block_column) {
+        this.block_column = block_column;
+    }
+
     public Cell[] getCells() {
         return cells;
     }
